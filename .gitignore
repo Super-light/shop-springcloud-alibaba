@@ -1,0 +1,11 @@
+/shop-utils/target/
+/shop-user/target/classes/
+/shop-bean/target/classes/io/plus/shop/
+/shop-order/target/classes/
+/.idea/
+/shop-springcloud-alibaba.iml
+/shop-product/target/classes/
+/shop-product/shop-product.iml
+/shop-order/shop-order.iml
+/shop-bean/shop-bean.iml
+/shop-user/shop-user.iml
