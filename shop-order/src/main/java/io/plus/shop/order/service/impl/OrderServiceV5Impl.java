@@ -1,27 +1,24 @@
-package io.plus.shop.service.impl;
+package io.plus.shop.order.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import io.plus.shop.bean.Order;
 import io.plus.shop.bean.OrderItem;
 import io.plus.shop.bean.Product;
 import io.plus.shop.bean.User;
-import io.plus.shop.mapper.OrderItemMapper;
-import io.plus.shop.mapper.OrderMapper;
+import io.plus.shop.order.feign.ProductService;
+import io.plus.shop.order.feign.UserService;
+import io.plus.shop.order.mapper.OrderItemMapper;
+import io.plus.shop.order.service.api.OrderService;
 import io.plus.shop.params.OrderParams;
-import io.plus.shop.service.api.OrderService;
 import io.plus.shop.utils.contants.HttpCode;
 import io.plus.shop.utils.response.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.client.ServiceInstance;
-import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
-
+import io.plus.shop.order.mapper.OrderMapper;
+import io.plus.shop.order.mapper.OrderItemMapper;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Random;
 
 /**
  * Description:
@@ -31,18 +28,17 @@ import java.util.Random;
  */
 @Service
 @Slf4j
-public class OrderServiceV4Impl implements OrderService {
+public class OrderServiceV5Impl implements OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
     private OrderItemMapper orderItemMapper;
+
     @Autowired
-    private RestTemplate restTemplate;
-
-
-    private String userServer = "server-user";
-    private String productServer = "server-product";
+    private UserService userService;
+    @Autowired
+    private ProductService productService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -51,17 +47,19 @@ public class OrderServiceV4Impl implements OrderService {
             throw new RuntimeException("参数异常: " + JSONObject.toJSONString(orderParams));
         }
 
-        User user = restTemplate.getForObject("http://" + userServer + "/user/get/" + orderParams.getUserId(), User.class);
+        User user = userService.getUser(orderParams.getUserId());
         if (user == null){
             throw new RuntimeException("未获取到用户信息: " + JSONObject.toJSONString(orderParams));
         }
-        Product product = restTemplate.getForObject("http://" + productServer + "/product/get/" + orderParams.getProductId(), Product.class);
+        Product product = productService.getProduct(orderParams.getProductId());
         if (product == null){
             throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
         }
+
         if (product.getProStock() < orderParams.getCount()){
             throw new RuntimeException("商品库存不足: " + JSONObject.toJSONString(orderParams));
         }
+
         Order order = new Order();
         order.setAddress(user.getAddress());
         order.setPhone(user.getPhone());
@@ -78,7 +76,7 @@ public class OrderServiceV4Impl implements OrderService {
         orderItem.setProPrice(product.getProPrice());
         orderItemMapper.insert(orderItem);
 
-        Result<Integer> result = restTemplate.getForObject("http://" + productServer + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
+        Result<Integer> result = productService.updateCount(orderParams.getProductId(), orderParams.getCount());
         if (result.getCode() != HttpCode.SUCCESS){
             throw new RuntimeException("库存扣减失败");
         }

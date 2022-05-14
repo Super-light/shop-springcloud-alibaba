@@ -1,4 +1,4 @@
-package io.plus.shop.service.api;
+package io.plus.shop.order.service.api;
 
 import io.plus.shop.params.OrderParams;
 
