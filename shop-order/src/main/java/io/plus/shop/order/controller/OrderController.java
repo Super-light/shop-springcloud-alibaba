@@ -1,8 +1,8 @@
-package io.plus.shop.controller;
+package io.plus.shop.order.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import io.plus.shop.params.OrderParams;
-import io.plus.shop.service.api.OrderService;
+import io.plus.shop.order.service.api.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

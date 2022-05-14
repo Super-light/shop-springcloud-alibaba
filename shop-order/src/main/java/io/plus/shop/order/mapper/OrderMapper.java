@@ -1,4 +1,4 @@
-package io.plus.shop.mapper;
+package io.plus.shop.order.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import io.plus.shop.bean.Order;

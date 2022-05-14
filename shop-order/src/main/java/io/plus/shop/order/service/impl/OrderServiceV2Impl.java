@@ -1,18 +1,20 @@
-//package io.plus.shop.service.impl;
+//package io.plus.shop.order.service.impl;
 //
 //import com.alibaba.fastjson.JSONObject;
 //import io.plus.shop.bean.Order;
 //import io.plus.shop.bean.OrderItem;
 //import io.plus.shop.bean.Product;
 //import io.plus.shop.bean.User;
-//import io.plus.shop.mapper.OrderItemMapper;
-//import io.plus.shop.mapper.OrderMapper;
+//import io.plus.shop.order.mapper.OrderItemMapper;
+//import io.plus.shop.order.mapper.OrderMapper;
 //import io.plus.shop.params.OrderParams;
-//import io.plus.shop.service.api.OrderService;
+//import io.plus.shop.order.service.api.OrderService;
 //import io.plus.shop.utils.contants.HttpCode;
 //import io.plus.shop.utils.response.Result;
 //import lombok.extern.slf4j.Slf4j;
 //import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.cloud.client.ServiceInstance;
+//import org.springframework.cloud.client.discovery.DiscoveryClient;
 //import org.springframework.stereotype.Service;
 //import org.springframework.transaction.annotation.Transactional;
 //import org.springframework.web.client.RestTemplate;
@@ -27,7 +29,7 @@
 // */
 //@Service
 //@Slf4j
-//public class OrderServiceV1Impl implements OrderService {
+//public class OrderServiceV2Impl implements OrderService {
 //
 //    @Autowired
 //    private OrderMapper orderMapper;
@@ -36,6 +38,17 @@
 //    @Autowired
 //    private RestTemplate restTemplate;
 //
+//    @Autowired
+//    private DiscoveryClient discoveryClient;
+//
+//    private String userServer = "server-user";
+//    private String productServer = "server-product";
+//
+//
+//    private String getServiceUrl(String serviceName){
+//        ServiceInstance serviceInstance = discoveryClient.getInstances(serviceName).get(0);
+//        return serviceInstance.getHost() + ":" + serviceInstance.getPort();
+//    }
 //
 //    @Override
 //    @Transactional(rollbackFor = Exception.class)
@@ -44,11 +57,15 @@
 //            throw new RuntimeException("参数异常: " + JSONObject.toJSONString(orderParams));
 //        }
 //
-//        User user = restTemplate.getForObject("http://localhost:8060/user/get/" + orderParams.getUserId(), User.class);
+//        //从Nacos服务中获取用户服务与商品服务的地址
+//        String userUrl = this.getServiceUrl(userServer);
+//        String productUrl = this.getServiceUrl(productServer);
+//
+//        User user = restTemplate.getForObject("http://" + userUrl + "/user/get/"  + orderParams.getUserId(), User.class);
 //        if (user == null){
 //            throw new RuntimeException("未获取到用户信息: " + JSONObject.toJSONString(orderParams));
 //        }
-//        Product product = restTemplate.getForObject("http://localhost:8070/product/get/" + orderParams.getProductId(), Product.class);
+//        Product product = restTemplate.getForObject("http://" + productUrl + "/product/get/" + orderParams.getProductId(), Product.class);
 //        if (product == null){
 //            throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
 //        }
@@ -71,7 +88,7 @@
 //        orderItem.setProPrice(product.getProPrice());
 //        orderItemMapper.insert(orderItem);
 //
-//        Result<Integer> result = restTemplate.getForObject("http://localhost:8070/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
+//        Result<Integer> result = restTemplate.getForObject("http://" + productUrl + "/product/update_count/" + orderParams.getProductId() + "/" + orderParams.getCount(), Result.class);
 //        if (result.getCode() != HttpCode.SUCCESS){
 //            throw new RuntimeException("库存扣减失败");
 //        }

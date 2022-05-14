@@ -1,4 +1,4 @@
-package io.plus.shop.config;
+package io.plus.shop.order.config;
 
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
