@@ -2,6 +2,8 @@ server:
   port: 8080
   servlet:
     context-path: /order
+  tomcat:
+    max-threads: 20
 spring:
   cloud:
     nacos:

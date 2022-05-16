@@ -26,4 +26,10 @@ public class OrderController {
         orderService.saveOrder(orderParams);
         return "success";
     }
+
+    @GetMapping(value = "/concurrent_request")
+    public String concurrentRequest(){
+        log.info("测试业务在高并发场景下是否存在问题");
+        return "plus";
+    }
 }
