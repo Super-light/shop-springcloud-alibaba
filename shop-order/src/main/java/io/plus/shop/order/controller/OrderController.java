@@ -32,4 +32,10 @@ public class OrderController {
         log.info("测试业务在高并发场景下是否存在问题");
         return "plus";
     }
+
+    @GetMapping(value = "/test_sentinel")
+    public String testSentinel(){
+        log.info("测试Sentinel");
+        return "sentinel";
+    }
 }

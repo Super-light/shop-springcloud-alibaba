@@ -4,8 +4,16 @@ server:
     context-path: /order
   tomcat:
     max-threads: 20
+feign:
+  sentinel:
+    enabled: true
 spring:
   cloud:
+    sentinel:
+      eager: true
+      transport:
+        port: 9999   #指定和Sentinel控制台交互的端口，任意指定一个未使用的端口即可
+        dashboard: 127.0.0.1:8888  #Sentinel控制台服务地址
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
