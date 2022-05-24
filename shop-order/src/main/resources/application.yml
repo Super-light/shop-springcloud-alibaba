@@ -11,6 +11,7 @@ spring:
   cloud:
     sentinel:
       eager: true
+      web-context-unify: false
       transport:
         port: 9999   #指定和Sentinel控制台交互的端口，任意指定一个未使用的端口即可
         dashboard: 127.0.0.1:8888  #Sentinel控制台服务地址
