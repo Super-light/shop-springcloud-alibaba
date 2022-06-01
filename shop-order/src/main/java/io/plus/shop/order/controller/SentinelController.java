@@ -1,5 +1,6 @@
 package io.plus.shop.order.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.plus.shop.order.service.api.SentinelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,26 @@ public class SentinelController {
         sentinelService.sendMessage();
         return "sentinel2";
     }
+
+    @GetMapping(value = "/request_sentinel3")
+    @SentinelResource("request_sentinel3")
+    public String requestSentinel3(String header, String body){
+        log.info("测试Sentinel3");
+        return "sentinel3";
+    }
+
+    private int count = 0;
+    @GetMapping(value = "/request_sentinel4")
+    @SentinelResource("request_sentinel4")
+    public String requestSentinel4(){
+        log.info("测试Sentinel4");
+        count++;
+        //模拟异常，比例为50%
+        if (count % 2 == 0){
+            throw new RuntimeException("演示基于异常比例熔断");
+        }
+        return "sentinel4";
+    }
+
 }
 
