@@ -53,5 +53,20 @@ public class SentinelController {
         return "sentinel4";
     }
 
+    @GetMapping(value = "/request_sentinel5")
+    @SentinelResource("request_sentinel5")
+    public String requestSentinel5(){
+        log.info("测试Sentinel5");
+        return "sentinel5";
+    }
+
+
+    @GetMapping(value = "/request_sentinel6")
+    public String requestSentinel6(){
+        log.info("测试Sentinel6");
+        return sentinelService.sendMessage2();
+    }
+
+
 }
 
