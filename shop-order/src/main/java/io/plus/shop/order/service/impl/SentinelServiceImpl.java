@@ -2,6 +2,8 @@ package io.plus.shop.order.service.impl;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+import io.plus.shop.order.handler.MyBlockHandler;
+import io.plus.shop.order.handler.MyFallback;
 import io.plus.shop.order.service.api.SentinelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,10 +25,17 @@ public class SentinelServiceImpl implements SentinelService {
 
     private int count = 0;
     @Override
+//    @SentinelResource(
+//            value = "sendMessage2",
+//            blockHandler = "blockHandler",
+//            fallback = "fallback")
     @SentinelResource(
             value = "sendMessage2",
+            blockHandlerClass = MyBlockHandler.class,
             blockHandler = "blockHandler",
+            fallbackClass = MyFallback.class,
             fallback = "fallback")
+
     public String sendMessage2() {
         count ++;
         //25%的异常率
