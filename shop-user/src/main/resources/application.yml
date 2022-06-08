@@ -3,6 +3,9 @@ server:
   servlet:
     context-path: /user
 spring:
+  sleuth:
+    sampler:
+      probability: 1.0
   cloud:
     nacos:
       discovery:

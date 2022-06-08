@@ -8,6 +8,9 @@ feign:
   sentinel:
     enabled: true
 spring:
+  sleuth:
+    sampler:
+      probability: 1.0
   cloud:
     sentinel:
       eager: true

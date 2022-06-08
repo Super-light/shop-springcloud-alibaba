@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Description:
  *
@@ -49,6 +52,35 @@ public class UserController {
     public String api2Demo2(){
         log.info("访问了api2Demo2接口");
         return "api2Demo2";
+    }
+
+    @GetMapping(value = "/api/filter1")
+    public String apiFilter1(HttpServletRequest request, HttpServletResponse response){
+        log.info("访问了api-Filter1接口");
+        String ip = request.getHeader("IP");
+        String name = request.getParameter("name");
+        log.info("ip = " + ip + ", name = " + name);
+        return "api-Filter1";
+    }
+
+    /**
+     * Sleuth 演示异步任务 生成（span id）
+     * @return
+     */
+    @GetMapping(value = "/async/api")
+    public String asyncApi() {
+        log.info("执行异步任务开始...");
+        userService.asyncMethod();
+        log.info("异步任务执行结束...");
+        return "asyncApi";
+    }
+
+    @GetMapping(value = "/sleuth/filter/api")
+    public String sleuthFilter(HttpServletRequest request) {
+        Object traceIdObj = request.getAttribute("traceId");
+        String traceId = traceIdObj == null ? "" : traceIdObj.toString();
+        log.info("获取到的traceId为: " + traceId);
+        return "sleuthFilter";
     }
 
 }

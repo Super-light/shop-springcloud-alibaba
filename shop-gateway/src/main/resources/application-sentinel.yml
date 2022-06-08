@@ -1,9 +1,6 @@
 server:
   port: 10001
 spring:
-  sleuth:
-    sampler:
-      probability: 1.0
   application:
     name: server-gateway
   main:
