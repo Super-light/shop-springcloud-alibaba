@@ -1,7 +1,8 @@
 package io.plus.shop.user.filter;
 
-import com.alibaba.nacos.shaded.io.opencensus.trace.Span;
-import com.alibaba.nacos.shaded.io.opencensus.trace.Tracer;
+
+import brave.Span;
+import brave.Tracer;
 import org.springframework.cloud.sleuth.instrument.web.SleuthWebProperties;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -26,7 +27,6 @@ import java.util.regex.Pattern;
 @Component
 @Order( Ordered.HIGHEST_PRECEDENCE + 6)
 public class MyGenericFilter extends GenericFilterBean {
-
     private Pattern skipPattern = Pattern.compile(SleuthWebProperties.DEFAULT_SKIP_PATTERN);
 
     private final Tracer tracer;
@@ -41,7 +41,7 @@ public class MyGenericFilter extends GenericFilterBean {
         if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)){
             throw new ServletException("只支持HTTP访问");
         }
-        Span currentSpan = this.tracer.getCurrentSpan();
+        Span currentSpan = this.tracer.currentSpan();
         if (currentSpan == null) {
             chain.doFilter(request, response);
             return;
@@ -50,11 +50,10 @@ public class MyGenericFilter extends GenericFilterBean {
         HttpServletResponse httpServletResponse = ((HttpServletResponse) response);
         boolean skipFlag = skipPattern.matcher(httpServletRequest.getRequestURI()).matches();
         if (!skipFlag){
-            String traceId = currentSpan.getContext().getTraceId().toString();
+            String traceId = currentSpan.context().traceIdString();
             httpServletRequest.setAttribute("traceId", traceId);
             httpServletResponse.addHeader("SLEUTH-HEADER", traceId);
         }
         chain.doFilter(httpServletRequest, httpServletResponse);
     }
 }
-
