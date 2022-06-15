@@ -26,7 +26,7 @@ import java.math.BigDecimal;
  * @author Super_light
  * @date 5/11/22 5:29 PM
  */
-@Service
+@Service(value = "v6")
 @Slf4j
 public class OrderServiceV6Impl implements OrderService {
 

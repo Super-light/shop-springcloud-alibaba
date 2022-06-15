@@ -5,6 +5,7 @@ import io.plus.shop.params.OrderParams;
 import io.plus.shop.order.service.api.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OrderController {
     @Autowired
+    @Qualifier(value = "v6")
     private OrderService orderService;
 
     @GetMapping(value = "/submit_order")
