@@ -31,7 +31,8 @@ public class ThreadPoolTaskExecutorConfig extends AsyncConfigurerSupport {
         executor.setQueueCapacity(10);
         executor.setThreadNamePrefix("trace-thread-");
         executor.initialize();
-//        return executor;
+
+        //        return executor;
         //包装返回的异步任务线程池
         return new LazyTraceExecutor(this.beanFactory, executor);
     }
