@@ -2,6 +2,8 @@ server:
   port: 8060
   servlet:
     context-path: /user
+rocketmq:
+  name-server: 127.0.0.1:9876
 spring:
   sleuth:
     sampler:
