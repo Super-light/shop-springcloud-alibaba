@@ -27,8 +27,6 @@ public class NacosController {
     @GetMapping("/nacos/test")
     public String nacosTest(){
         String authorName = context.getEnvironment().getProperty("author.name");
-        final Thread thread = new Thread();
-        thread.start();
         log.info("获取到的作者姓名为：{}", authorName);
         return authorName;
     }
