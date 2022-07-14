@@ -70,6 +70,12 @@ public class OrderServiceV7Impl implements OrderService {
         rocketMQTemplate.convertAndSend("order-topic", order);
     }
 
+
+    /**
+     * 校验用户
+     * @param user 用户实体
+     * @param orderParams 订单参数
+     */
     private void checkUser (User user,OrderParams orderParams) {
         if (user == null){
             throw new RuntimeException("未获取到用户信息: " + JSONObject.toJSONString(orderParams));
@@ -79,6 +85,11 @@ public class OrderServiceV7Impl implements OrderService {
         }
     }
 
+    /**
+     * 校验商品数据
+     * @param product 商品实体
+     * @param orderParams 订单参数
+     */
     private void checkProduct(Product product, OrderParams orderParams) {
         if (product == null){
             throw new RuntimeException("未获取到商品信息: " + JSONObject.toJSONString(orderParams));
@@ -92,6 +103,13 @@ public class OrderServiceV7Impl implements OrderService {
         }
     }
 
+    /**
+     * 入库操作
+     * @param user 用户实体
+     * @param orderParams 订单参数
+     * @param product 商品实体
+     * @return
+     */
     private Order insertDB(User user,OrderParams orderParams,Product product) {
         Order order = new Order();
         order.setAddress(user.getAddress());
